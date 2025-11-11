@@ -12,120 +12,60 @@
     padding: 20px;
     text-align: center;
   }
-  img.logo {
-    max-width: 200px;
-    margin-bottom: 20px;
-  }
   h1 {
     font-size: 2.5em;
     color: #2e7d32;
-    margin-bottom: 10px;
-  }
-  #lotado {
-    color: red;
-    font-size: 1.5em;
     margin-bottom: 20px;
-    display: none;
   }
-  #confirmacao {
-    font-size: 2em;
-    color: #2e7d32;
-    margin-top: 30px;
-    display: none;
-  }
-  #formReserva {
-    background-color: #ffffff;
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 20px;
+  iframe {
+    width: 100%;
+    max-width: 600px;
+    height: 900px;
+    border: none;
     border-radius: 15px;
     box-shadow: 0 0 15px rgba(0,0,0,0.3);
-    text-align: left;
   }
-  #formReserva h2 {
-    text-align: center;
-    color: #388e3c;
+  .mensagem {
+    font-size: 1.5em;
+    color: #2e7d32;
+    margin-top: 20px;
+    margin-bottom: 10px;
   }
-  #formReserva input, #formReserva select, #formReserva textarea, #formReserva button {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    box-sizing: border-box;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 1em;
-  }
-  #formReserva button {
-    background-color: #43a047;
-    color: white;
-    border: none;
+  .whatsapp-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 12px 25px;
     font-size: 1.2em;
-    cursor: pointer;
+    color: #ffffff;
+    background-color: #25D366;
+    border-radius: 8px;
+    text-decoration: none;
     transition: background 0.3s;
   }
-  #formReserva button:hover {
-    background-color: #2e7d32;
+  .whatsapp-btn:hover {
+    background-color: #1ebe57;
   }
 </style>
 </head>
 <body>
 
-<img src="logo.png" alt="Logo" class="logo">
 <h1>Trilheiros de Rondonópolis - Reserva de Vaga Ônibus</h1>
-<p id="lotado">Vagas Lotadas!</p>
 
-<div id="formReserva">
-  <h2>Formulário de Reserva</h2>
-  <form id="reservaForm" onsubmit="return verificarVagas()">
-    <label for="nome">Nome:</label>
-    <input type="text" id="nome" name="nome" placeholder="Seu nome completo" required>
+<!-- Google Form embutido -->
+<iframe src="https://docs.google.com/forms/d/e/1FAIpQLScl2YPzO2MZNeaFKkImFz5oSD8JL2z5qBtS11l3kl9RCQgvSg/viewform?embedded=true">
+Carregando…
+</iframe>
 
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" placeholder="Seu email" required>
+<!-- Mensagem de instrução -->
+<p class="mensagem">
+Muito bem! Você confirmou a vaga. Agora, envie seu comprovante pelo WhatsApp:
+</p>
 
-    <label for="telefone">Telefone:</label>
-    <input type="tel" id="telefone" name="telefone" placeholder="(xx) xxxx-xxxx" required>
-
-    <label for="quantidade">Quantidade de Vagas:</label>
-    <input type="number" id="quantidade" name="quantidade" min="1" max="45" required>
-
-    <label for="pix">Comprovante de Pix (opcional):</label>
-    <input type="file" id="pix" name="pix">
-
-    <label for="observacoes">Observações:</label>
-    <textarea id="observacoes" name="observacoes" rows="3" placeholder="Ex: Necessidades especiais, acompanhantes, etc."></textarea>
-
-    <p>Instruções: Envie o comprovante de Pix aqui ou aguarde contato para confirmação.</p>
-
-    <button type="submit">Enviar Reserva</button>
-  </form>
-</div>
-
-<p id="confirmacao">Sua reserva foi feita. Aguarde a lista.</p>
-
-<script>
-  let vagasDisponiveis = 45;
-
-  function verificarVagas() {
-    const quantidade = parseInt(document.getElementById('quantidade').value);
-    if (quantidade > vagasDisponiveis) {
-      alert(`Apenas ${vagasDisponiveis} vaga(s) disponível(is).`);
-      return false;
-    }
-    vagasDisponiveis -= quantidade;
-    
-    // Esconde o formulário e mostra a mensagem de confirmação
-    document.getElementById('formReserva').style.display = 'none';
-    document.getElementById('confirmacao').style.display = 'block';
-    
-    if (vagasDisponiveis <= 0) {
-      document.getElementById('lotado').style.display = 'block';
-    }
-
-    document.getElementById('reservaForm').reset();
-    return false; 
-  }
-</script>
+<!-- Botão WhatsApp -->
+<a class="whatsapp-btn" href="https://wa.me/5566996926174" target="_blank">
+  Enviar Comprovante
+</a>
 
 </body>
 </html>
+
