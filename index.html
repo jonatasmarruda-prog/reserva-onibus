@@ -27,6 +27,12 @@
     margin-bottom: 20px;
     display: none;
   }
+  #confirmacao {
+    font-size: 2em;
+    color: #2e7d32;
+    margin-top: 30px;
+    display: none;
+  }
   #formReserva {
     background-color: #ffffff;
     max-width: 500px;
@@ -95,6 +101,8 @@
   </form>
 </div>
 
+<p id="confirmacao">Sua reserva foi feita. Aguarde a lista.</p>
+
 <script>
   let vagasDisponiveis = 45;
 
@@ -105,11 +113,15 @@
       return false;
     }
     vagasDisponiveis -= quantidade;
-    alert('Reserva enviada com sucesso!');
+    
+    // Esconde o formulário e mostra a mensagem de confirmação
+    document.getElementById('formReserva').style.display = 'none';
+    document.getElementById('confirmacao').style.display = 'block';
+    
     if (vagasDisponiveis <= 0) {
       document.getElementById('lotado').style.display = 'block';
-      document.getElementById('reservaForm').style.display = 'none';
     }
+
     document.getElementById('reservaForm').reset();
     return false; 
   }
