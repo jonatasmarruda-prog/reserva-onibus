@@ -85,11 +85,11 @@
 <div class="container">
     <h2>Faça sua reserva</h2>
     
-    <div class="notice">
-        <strong>Atenção:</strong> Restam apenas 10 vagas. Valor: R$ 50,00 por pessoa. Pagamento via PIX até 48h antes do passeio.
+    <div class="notice" id="notice">
+        Restam <span id="vagas">45</span> vagas. Valor: R$ 68,00 por pessoa. Pagamento via PIX até 48h antes do passeio.
     </div>
 
-    <form action="#" method="post" enctype="multipart/form-data">
+    <form id="reservaForm" action="#" method="post" enctype="multipart/form-data">
         <label for="nome">Nome completo:</label>
         <input type="text" id="nome" name="nome" placeholder="Digite seu nome" required>
 
@@ -100,12 +100,12 @@
         <input type="text" id="telefone" name="telefone" placeholder="Digite seu telefone" required>
 
         <label for="quantidade">Quantidade de vagas:</label>
-        <input type="number" id="quantidade" name="quantidade" min="1" max="10" required>
+        <input type="number" id="quantidade" name="quantidade" min="1" max="45" required>
 
         <label for="pix">Pagamento via PIX:</label>
         <div class="instructions">
             Copie a chave PIX abaixo e faça o pagamento:<br>
-            <strong>PIX: 000.000.000-00</strong><br>
+            <strong>PIX: trilheiros.roomt@gmail.com</strong><br>
             Após o pagamento, envie o comprovante abaixo.
         </div>
 
@@ -115,7 +115,37 @@
         <button type="submit">Enviar Reserva</button>
     </form>
 </div>
+
+<script>
+let vagas = 45;
+
+const form = document.getElementById('reservaForm');
+const notice = document.getElementById('notice');
+const vagasSpan = document.getElementById('vagas');
+
+form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const quantidade = parseInt(document.getElementById('quantidade').value);
+
+    if (quantidade > vagas) {
+        alert('Quantidade maior que as vagas disponíveis!');
+        return;
+    }
+
+    vagas -= quantidade;
+
+    if (vagas <= 0) {
+        vagas = 0;
+        notice.textContent = 'Lotado! Não há mais vagas disponíveis.';
+        document.querySelector('button').disabled = true;
+    } else {
+        vagasSpan.textContent = vagas;
+        alert(`Reserva confirmada! Restam ${vagas} vagas.`);
+    }
+
+    // Aqui você poderia adicionar código para enviar o formulário ao servidor
+    form.reset();
+});
+</script>
 </body>
 </html>
-
-
