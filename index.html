@@ -1,46 +1,81 @@
-const scriptURL = "COLE_AQUI_O_URL_DO_APPS_SCRIPT"; // URL do Apps Script
+<!-- Começo: contador de vagas -->
+<div class="contador">
+  Vagas restantes: <span id="vagasRestantes">...carregando...</span> / 45
+</div>
+<div class="barra-vagas">
+  <div id="barraPreenchida" class="barra-preenchida">...</div>
+</div>
 
-async function atualizarVagas() {
-  const res = await fetch(scriptURL);
-  const data = await res.json();
-  vagasRestantes = data.vagasRestantes;
-  totalVagas = data.totalVagas;
-  vagasRestantesSpan.innerText = vagasRestantes;
-  atualizarBarra();
-  atualizarQuantidadeOptions();
-}
+<script>
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzt8E7M3UHirzIVm2Y‑GIkqs8G7tJP_ltJ‑DxNiBT55pmdyDtu2Fjaq3gxpDag2LWt2Lw/exec";
+  let totalVagas = 45;
+  let vagasRestantes = totalVagas;
+  const valorPorPessoa = 68;
 
-async function enviarWhatsApp() {
-  const nomes = document.getElementById('nomes').value.trim();
-  const qtd = parseInt(quantidadeSelect.value);
+  const quantidadeSelect = document.getElementById('quantidade');
+  const valorTotalSpan = document.getElementById('valorTotal');
+  const vagasRestantesSpan = document.getElementById('vagasRestantes');
+  const barraPreenchida = document.getElementById('barraPreenchida');
 
-  if (!nomes) {
-    alert("Preencha o nome!");
-    return;
+  async function atualizarVagas() {
+    try {
+      const resposta = await fetch(SCRIPT_URL);
+      const dados = await resposta.json();
+      if (dados.error) {
+        console.error("Erro ao buscar vagas:", dados.error);
+        return;
+      }
+      vagasRestantes = dados.vagasRestantes;
+      totalVagas = dados.totalVagas;
+      vagasRestantesSpan.innerText = vagasRestantes;
+    } catch (e) {
+      console.error("Erro de rede:", e);
+    }
+    atualizarQuantidadeOptions();
+    atualizarBarra();
   }
 
-  // Chama o Apps Script para reservar as vagas
-  const res = await fetch(`${scriptURL}?qtd=${qtd}&action=reservarVagas`);
-  const data = await res.json();
-
-  if (!data.success) {
-    alert(data.message);
-    await atualizarVagas();
-    return;
+  function atualizarQuantidadeOptions() {
+    quantidadeSelect.innerHTML = '';
+    const max = vagasRestantes > 5 ? 5 : vagasRestantes;
+    for (let i = 1; i <= max; i++) {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.text = i + (i === 1 ? ' vaga' : ' vagas');
+      quantidadeSelect.appendChild(opt);
+    }
+    atualizarValor();
   }
 
-  vagasRestantes = data.vagasRestantes;
-  vagasRestantesSpan.innerText = vagasRestantes;
-  atualizarBarra();
-  atualizarQuantidadeOptions();
-
-  const valorTotal = qtd * valorPorPessoa;
-  const mensagem = `Olá, segue a minha reserva:\nNome(s): ${nomes}\nQuantidade de vagas: ${qtd}\nValor total: R$ ${valorTotal}\nComprovante do PIX anexado.`;
-  const numeroWhatsApp = "5566996926174";
-  window.open(`https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensagem)}`, "_blank");
-
-  if (vagasRestantes <= 0) {
-    alert("Vagas lotadas! Entre em contato via WhatsApp para verificar outro ônibus.");
+  function atualizarValor() {
+    const qtd = parseInt(quantidadeSelect.value) || 1;
+    valorTotalSpan.innerText = (valorPorPessoa * qtd).toFixed(2);
   }
-}
 
+  function atualizarBarra() {
+    const perc = (vagasRestantes / totalVagas) * 100;
+    barraPreenchida.style.width = perc + '%';
+    barraPreenchida.textContent = perc.toFixed(0) + '%';
+    if (vagasRestantes === 0) {
+      barraPreenchida.style.backgroundColor = '#555';
+      barraPreenchida.textContent = 'LOTADO';
+      quantidadeSelect.disabled = true;
+    } else if (vagasRestantes <= 5) {
+      barraPreenchida.style.backgroundColor = 'red';
+      barraPreenchida.style.color = 'white';
+    } else if (vagasRestantes <= 15) {
+      barraPreenchida.style.backgroundColor = 'yellow';
+      barraPreenchida.style.color = 'black';
+    } else {
+      barraPreenchida.style.backgroundColor = 'green';
+      barraPreenchida.style.color = 'white';
+    }
+  }
+
+  // Inicializa
+  atualizarVagas();
+  setInterval(atualizarVagas, 30000);
+</script>
+<!-- Fim: contador de vagas -->
+
+<!-- O resto do formulário e funções (PIX, WhatsApp) ficam abaixo... -->
