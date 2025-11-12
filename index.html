@@ -3,255 +3,139 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Reserva de Vagas - Trilheiros</title>
+<title>Reserva de Ônibus - Trilheiros de Rondonópolis</title>
 <style>
   body {
     font-family: Arial, sans-serif;
     background: linear-gradient(to bottom, #a8e6cf, #dcedc1);
+    margin: 0;
     padding: 20px;
     text-align: center;
   }
   h1 {
+    font-size: 2.2em;
     color: #2e7d32;
-    font-size: 2.8em;
-    margin-bottom: 25px;
-    text-shadow: 2px 2px 4px #aaa;
+    margin-bottom: 10px;
   }
-  input, select, button {
-    padding: 14px;
-    margin: 8px 0;
-    font-size: 1.2em;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    width: 280px;
-    max-width: 95%;
-    transition: transform 0.2s;
-  }
-  input:focus, select:focus {
-    outline: none;
-    transform: scale(1.02);
-    border-color: #2e7d32;
-  }
-  button {
-    cursor: pointer;
-    font-weight: bold;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-  }
-  .btn-reserva {
-    background-color: #2e7d32;
-    color: white;
-    border: none;
-    margin-top: 10px;
-  }
-  .btn-reserva:hover {
-    background-color: #1b4d20;
-    transform: scale(1.05);
-  }
-  .btn-pix {
-    background-color: #f39c12;
-    color: white;
-    border: none;
-    margin-top: 10px;
-  }
-  .btn-pix:hover {
-    background-color: #e67e22;
-    transform: scale(1.05);
-  }
-  .info {
-    margin: 15px 0;
-    font-size: 1.3em;
-    color: #2e7d32;
+  h2 {
+    color: #388e3c;
+    margin-top: 0;
   }
   .contador {
-    margin: 20px 0;
-    font-size: 1.4em;
-    font-weight: bold;
+    font-size: 1.2em;
+    background: #fff;
+    display: inline-block;
+    padding: 10px 25px;
+    border-radius: 10px;
+    margin: 15px 0;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
   }
-  .barra-vagas {
-    width: 100%;
-    max-width: 420px;
-    height: 35px;
-    background-color: #ccc;
-    border-radius: 18px;
-    margin: 15px auto 30px auto;
-    overflow: hidden;
-    box-shadow: inset 0 0 5px rgba(0,0,0,0.3);
+  form {
+    background: #fff;
+    padding: 20px;
+    border-radius: 15px;
+    max-width: 400px;
+    margin: 0 auto;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
   }
-  .barra-preenchida {
-    height: 100%;
-    width: 0%;
-    text-align: center;
-    color: white;
-    line-height: 35px;
-    font-weight: bold;
-    transition: width 0.7s ease, background-color 0.5s ease;
-  }
-  .exemplo-msg {
-    text-align: left;
-    background-color: #e0f7fa;
-    padding: 15px;
-    border-radius: 12px;
-    margin-top: 20px;
-    max-width: 520px;
-    margin-left: auto;
-    margin-right: auto;
+  input, button {
+    width: 90%;
+    padding: 10px;
+    margin-top: 10px;
     font-size: 1em;
-    line-height: 1.4em;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+  }
+  button {
+    background: #2e7d32;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+  button:hover {
+    background: #1b5e20;
+  }
+  .pix {
+    margin-top: 20px;
+    font-size: 1.1em;
+    background: #fff;
+    padding: 10px;
+    border-radius: 10px;
   }
 </style>
 </head>
 <body>
 
-<h1>Reserva de Vagas - Trilheiros</h1>
+<h1>Reserva de Ônibus</h1>
+<h2>Trilheiros de Rondonópolis</h2>
 
-<div class="contador">
-  Vagas restantes: <span id="vagasRestantes">...carregando...</span> / 45
-</div>
-<div class="barra-vagas">
-  <div id="barraPreenchida" class="barra-preenchida">...</div>
+<div class="contador" id="contador">
+  Carregando vagas...
 </div>
 
-<div id="formulario">
-  <input type="text" id="nomes" placeholder="Digite seu nome ou nomes separados por vírgula"><br>
-  <select id="quantidade"></select><br>
-  <div class="info">
-    Valor total: R$ <span id="valorTotal">68</span>
-  </div>
-  <button class="btn-pix" onclick="copiarPIX()">Copiar Chave PIX</button><br>
-  <button class="btn-reserva" onclick="enviarWhatsApp()">Enviar Reserva via WhatsApp</button>
-</div>
+<form id="reservaForm">
+  <label>Nome completo:</label><br>
+  <input type="text" id="nome" required><br>
 
-<div class="exemplo-msg">
-<b>Exemplo de mensagem para enviar:</b><br>
-Olá, segue a minha reserva:<br>
-Nome(s): Ana Souza e João Silva<br>
-Quantidade de vagas: 2<br>
-Valor total: R$ 136,00<br>
-Comprovante do PIX anexado
-</div>
+  <label>Quantidade de vagas:</label><br>
+  <input type="number" id="vagas" min="1" max="10" required><br>
 
-<audio id="alertaSom">
-  <source src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg" type="audio/ogg">
-</audio>
+  <button type="button" onclick="enviarReserva()">Confirmar e Enviar no WhatsApp</button>
+</form>
+
+<div class="pix">
+  <p>💳 Valor por pessoa: <b>R$ 68,00</b></p>
+  <p>🔑 Chave Pix: <b>trilheiros.roomt@gmail.com</b> <button onclick="copiarPix()">Copiar</button></p>
+</div>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzt8E7M3UHirzIVm2Y-GIkqs8G7tJP_ltJ-DxNiBT55pmdyDtu2Fjaq3gxpDag2LWt2Lw/exec";
+const scriptURL = "https://script.google.com/macros/s/AKfycbzt8E7M3UHirzIVm2Y-GIkqs8G7tJP_ltJ-DxNiBT55pmdyDtu2Fjaq3gxpDag2LWt2Lw/exec";
+const limite = 45;
+const numeroWhatsApp = "5566996926174";
 
-let totalVagas = 45;
-let vagasRestantes = totalVagas;
-const valorPorPessoa = 68;
-
-const quantidadeSelect = document.getElementById('quantidade');
-const valorTotalSpan = document.getElementById('valorTotal');
-const vagasRestantesSpan = document.getElementById('vagasRestantes');
-const barraPreenchida = document.getElementById('barraPreenchida');
-const alertaSom = document.getElementById('alertaSom');
-
-async function atualizarVagas() {
-  try {
-    const res = await fetch(SCRIPT_URL);
-    const data = await res.json();
-    vagasRestantes = data.vagasRestantes;
-    totalVagas = data.totalVagas;
-    vagasRestantesSpan.innerText = vagasRestantes;
-  } catch(e) {
-    console.error("Erro ao buscar vagas:", e);
-  }
-  atualizarQuantidadeOptions();
-  atualizarBarra();
+function atualizarContador() {
+  fetch(scriptURL)
+    .then(r => r.json())
+    .then(d => {
+      if (d.total >= limite) {
+        document.getElementById("contador").innerHTML = "🚫 Vagas lotadas! Entre em contato via WhatsApp para verificar nova turma.";
+        document.getElementById("reservaForm").style.display = "none";
+      } else {
+        const vagasRestantes = limite - d.total;
+        document.getElementById("contador").innerHTML = `✅ Vagas preenchidas: ${d.total} | Vagas disponíveis: ${vagasRestantes}`;
+      }
+    })
+    .catch(() => {
+      document.getElementById("contador").innerHTML = "Erro ao carregar contador.";
+    });
 }
 
-function atualizarQuantidadeOptions() {
-  quantidadeSelect.innerHTML = '';
-  const max = vagasRestantes > 5 ? 5 : vagasRestantes;
-  for (let i = 1; i <= max; i++) {
-    const opt = document.createElement('option');
-    opt.value = i;
-    opt.text = i + (i === 1 ? ' vaga' : ' vagas');
-    quantidadeSelect.appendChild(opt);
-  }
-  atualizarValor();
-}
-
-function atualizarValor() {
-  const qtd = parseInt(quantidadeSelect.value) || 1;
-  valorTotalSpan.innerText = (valorPorPessoa * qtd).toFixed(2);
-}
-
-function atualizarBarra() {
-  const perc = (vagasRestantes / totalVagas) * 100;
-  barraPreenchida.style.width = perc + '%';
-  barraPreenchida.textContent = perc.toFixed(0) + '%';
-
-  if (vagasRestantes === 0) {
-    barraPreenchida.style.backgroundColor = '#555';
-    barraPreenchida.textContent = 'LOTADO';
-    quantidadeSelect.disabled = true;
-    alertaSom.play();
-  } else if (vagasRestantes <= 5) {
-    barraPreenchida.style.backgroundColor = '#e74c3c';
-    barraPreenchida.style.color = 'white';
-  } else if (vagasRestantes <= 15) {
-    barraPreenchida.style.backgroundColor = '#f1c40f';
-    barraPreenchida.style.color = 'black';
-  } else {
-    barraPreenchida.style.backgroundColor = '#27ae60';
-    barraPreenchida.style.color = 'white';
-  }
-}
-
-function copiarPIX() {
-  const chavePIX = "trilheiros.roomt@gmail.com";
-  navigator.clipboard.writeText(chavePIX).then(() => {
-    alert("Chave PIX copiada: " + chavePIX);
-  });
-}
-
-async function enviarWhatsApp() {
-  const nomes = document.getElementById('nomes').value.trim();
-  const qtd = parseInt(quantidadeSelect.value);
-
-  if (!nomes) {
-    alert("Preencha o campo Nome(s)!");
+function enviarReserva() {
+  const nome = document.getElementById("nome").value.trim();
+  const vagas = parseInt(document.getElementById("vagas").value);
+  if (!nome || !vagas) {
+    alert("Preencha seu nome e a quantidade de vagas.");
     return;
   }
 
-  try {
-    // Chama Apps Script para reservar vagas
-    const res = await fetch(`${SCRIPT_URL}?qtd=${qtd}&action=reservarVagas`);
-    const data = await res.json();
-
-    if (!data.success) {
-      alert(data.message);
-      atualizarVagas();
-      return;
-    }
-
-    vagasRestantes = data.vagasRestantes;
-    vagasRestantesSpan.innerText = vagasRestantes;
-    atualizarQuantidadeOptions();
-    atualizarBarra();
-
-    const valorTotal = qtd * valorPorPessoa;
-    const mensagem = `Olá, segue a minha reserva:\nNome(s): ${nomes}\nQuantidade de vagas: ${qtd}\nValor total: R$ ${valorTotal}\nComprovante do PIX anexado.`;
-    const numeroWhatsApp = "5566996926174";
-    window.open(`https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensagem)}`, "_blank");
-
-    if (vagasRestantes <= 0) {
-      alert("Vagas lotadas! Entre em contato via WhatsApp para verificar outro ônibus.");
-      alertaSom.play();
-    }
-
-  } catch(e) {
-    console.error("Erro ao reservar vagas:", e);
-  }
+  fetch(scriptURL + `?nome=${encodeURIComponent(nome)}&vagas=${vagas}`)
+    .then(r => r.text())
+    .then(() => {
+      const valorTotal = vagas * 68;
+      const msg = `Olá, segue minha reserva.%0A%0ANome: ${nome}%0AQuantidade de vagas: ${vagas}%0AValor total: R$ ${valorTotal},00%0AComprovante em anexo.`;
+      window.open(`https://wa.me/${numeroWhatsApp}?text=${msg}`, "_blank");
+      atualizarContador();
+    });
 }
 
-// Inicializa
-atualizarVagas();
-setInterval(atualizarVagas, 30000); 
-quantidadeSelect.addEventListener('change', atualizarValor);
+function copiarPix() {
+  navigator.clipboard.writeText("trilheiros.roomt@gmail.com");
+  alert("Chave Pix copiada!");
+}
+
+atualizarContador();
 </script>
 
 </body>
 </html>
+
